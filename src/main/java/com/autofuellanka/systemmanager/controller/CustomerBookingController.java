@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-
 @RestController
 @RequestMapping("/api/customers/{customerId}/bookings")
 @CrossOrigin(origins = "http://localhost:5173")
@@ -51,5 +50,51 @@ public class CustomerBookingController {
 
         Booking saved = bookingRepo.save(b);
         return ResponseEntity.ok(new BookingDTO(saved));
+    }
+
+    // --- Update booking (only if still PENDING)
+    @PutMapping(path = "/{bookingId}", consumes = "application/json", produces = "application/json")
+    public ResponseEntity<?> update(
+            @PathVariable Long customerId,
+            @PathVariable Long bookingId,
+            @Valid @RequestBody BookingCreateRequest req
+    ) {
+        Booking existing = bookingRepo.findById(bookingId).orElse(null);
+        if (existing == null || !existing.getCustomerId().equals(customerId)) {
+            return ResponseEntity.notFound().build();
+        }
+        if (!"PENDING".equalsIgnoreCase(existing.getStatus())) {
+            return ResponseEntity.badRequest().body("Cannot edit booking unless status is PENDING");
+        }
+
+        existing.setStartTime(req.startTime);
+        existing.setEndTime(req.endTime);
+        existing.setType(req.type);
+        existing.setFuelType(req.fuelType);
+        existing.setLitersRequested(req.litersRequested);
+        existing.setLocationId(req.locationId);
+        existing.setVehicleId(req.vehicleId);
+        existing.setServiceTypeId(req.serviceTypeId);
+
+        Booking saved = bookingRepo.save(existing);
+        return ResponseEntity.ok(new BookingDTO(saved));
+    }
+
+    // --- Delete booking (only if still PENDING)
+    @DeleteMapping("/{bookingId}")
+    public ResponseEntity<?> delete(
+            @PathVariable Long customerId,
+            @PathVariable Long bookingId
+    ) {
+        Booking existing = bookingRepo.findById(bookingId).orElse(null);
+        if (existing == null || !existing.getCustomerId().equals(customerId)) {
+            return ResponseEntity.notFound().build();
+        }
+        if (!"PENDING".equalsIgnoreCase(existing.getStatus())) {
+            return ResponseEntity.badRequest().body("Cannot delete booking unless status is PENDING");
+        }
+
+        bookingRepo.delete(existing);
+        return ResponseEntity.noContent().build();
     }
 }

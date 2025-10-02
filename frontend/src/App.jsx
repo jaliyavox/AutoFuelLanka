@@ -6,6 +6,7 @@ import CustomerDashboard from "./pages/CustomerDashboard.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import { useAuth } from "./contexts/AuthContext.jsx";
 import NewCustomerBooking from "./pages/customer/NewCustomerBooking.jsx";
+import EditCustomerBooking from "./pages/customer/EditCustomerBooking.jsx";
 
 function Navbar() {
     const { user, logout } = useAuth();
@@ -63,6 +64,14 @@ export default function App() {
                     element={
                         <ProtectedRoute roles={["CUSTOMER"]}>
                             <NewCustomerBooking />
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path="/customer/bookings/:id/edit"
+                    element={
+                        <ProtectedRoute roles={["CUSTOMER"]}>
+                            <EditCustomerBooking />
                         </ProtectedRoute>
                     }
                 />
