@@ -1,6 +1,8 @@
-import { useState } from "react";   // <-- keep import only at the top
+import { useState } from "react";
+import { useAuth } from "../contexts/AuthContext.jsx";
 
 export default function Login() {
+    const { login } = useAuth();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [err, setErr] = useState("");
@@ -21,25 +23,16 @@ export default function Login() {
         }
 
         const user = await res.json();
-        localStorage.setItem("user", JSON.stringify(user));
-        window.location.href = "/staff"; // redirect to staff area after login
+        login(user); // 👈 use context
+        window.location.href = "/"; // redirect after login
     };
 
     return (
         <form onSubmit={submit} style={{ maxWidth: 380, margin: "40px auto" }}>
             <h2>Login</h2>
             {err && <p style={{ color: "red" }}>{err}</p>}
-            <input
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="Email"
-            />
-            <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Password"
-            />
+            <input value={email} onChange={e=>setEmail(e.target.value)} placeholder="Email" />
+            <input type="password" value={password} onChange={e=>setPassword(e.target.value)} placeholder="Password" />
             <button type="submit">Login</button>
         </form>
     );
