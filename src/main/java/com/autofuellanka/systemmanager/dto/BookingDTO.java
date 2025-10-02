@@ -8,8 +8,8 @@ public class BookingDTO {
     private String endTime;
     private String fuelType;
     private Double litersRequested;
-    private String status;
-    private String type;
+    private String status;       // keep as String for JSON
+    private String type;         // keep as String for JSON
     private Long customerId;
     private Long locationId;
     private Long vehicleId;
@@ -21,8 +21,8 @@ public class BookingDTO {
         this.endTime = b.getEndTime();
         this.fuelType = b.getFuelType();
         this.litersRequested = b.getLitersRequested();
-        this.status = b.getStatus();
-        this.type = b.getType();
+        this.status = (b.getStatus() != null) ? b.getStatus().name() : null;  // enum → String
+        this.type = (b.getType() != null) ? b.getType().name() : null;        // enum → String
         this.customerId = b.getCustomerId();
         this.locationId = b.getLocationId();
         this.vehicleId = b.getVehicleId();
