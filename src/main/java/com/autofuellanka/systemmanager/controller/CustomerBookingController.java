@@ -3,6 +3,7 @@ package com.autofuellanka.systemmanager.controller;
 import com.autofuellanka.systemmanager.dto.BookingCreateRequest;
 import com.autofuellanka.systemmanager.dto.BookingDTO;
 import com.autofuellanka.systemmanager.model.Booking;
+import com.autofuellanka.systemmanager.model.BookingStatus;
 import com.autofuellanka.systemmanager.repository.BookingRepository;
 
 import jakarta.validation.Valid;
@@ -40,10 +41,10 @@ public class CustomerBookingController {
         b.setCustomerId(customerId);
         b.setStartTime(req.startTime);
         b.setEndTime(req.endTime);
-        b.setType(req.type);
+        b.setType(req.type);                     // enum BookingType
         b.setFuelType(req.fuelType);
         b.setLitersRequested(req.litersRequested);
-        b.setStatus("PENDING"); // default
+        b.setStatus(BookingStatus.PENDING);      // enum BookingStatus
         b.setLocationId(req.locationId);
         b.setVehicleId(req.vehicleId);
         b.setServiceTypeId(req.serviceTypeId);
@@ -63,13 +64,13 @@ public class CustomerBookingController {
         if (existing == null || !existing.getCustomerId().equals(customerId)) {
             return ResponseEntity.notFound().build();
         }
-        if (!"PENDING".equalsIgnoreCase(existing.getStatus())) {
+        if (existing.getStatus() != BookingStatus.PENDING) {
             return ResponseEntity.badRequest().body("Cannot edit booking unless status is PENDING");
         }
 
         existing.setStartTime(req.startTime);
         existing.setEndTime(req.endTime);
-        existing.setType(req.type);
+        existing.setType(req.type);                  // enum BookingType
         existing.setFuelType(req.fuelType);
         existing.setLitersRequested(req.litersRequested);
         existing.setLocationId(req.locationId);
@@ -90,7 +91,7 @@ public class CustomerBookingController {
         if (existing == null || !existing.getCustomerId().equals(customerId)) {
             return ResponseEntity.notFound().build();
         }
-        if (!"PENDING".equalsIgnoreCase(existing.getStatus())) {
+        if (existing.getStatus() != BookingStatus.PENDING) {
             return ResponseEntity.badRequest().body("Cannot delete booking unless status is PENDING");
         }
 
