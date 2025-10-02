@@ -101,6 +101,14 @@ public class UserController {
     // ---- mapper
     private UserSummaryDTO toDto(User u) {
         var roleStrings = u.getRoles().stream().map(Enum::name).collect(Collectors.toSet());
-        return new UserSummaryDTO(u.getId(), u.getEmail(), u.getFullName(), u.isEnabled(), roleStrings);
+        return new UserSummaryDTO(
+                u.getId(),
+                u.getEmail(),
+                u.getFullName(),
+                u.getPhone(),
+                u.getAddress(),
+                u.isEnabled(),
+                roleStrings
+        );
     }
 }
