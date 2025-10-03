@@ -7,6 +7,8 @@ import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import { useAuth } from "./contexts/AuthContext.jsx";
 import NewCustomerBooking from "./pages/customer/NewCustomerBooking.jsx";
 import EditCustomerBooking from "./pages/customer/EditCustomerBooking.jsx";
+import MyServiceBookings from "./pages/customer/MyServiceBookings.jsx";
+import ServiceBookings from "./pages/staff/ServiceBookings.jsx";
 
 function Navbar() {
     const { user, logout } = useAuth();
@@ -67,6 +69,8 @@ export default function App() {
                         </ProtectedRoute>
                     }
                 />
+                <Route path="/my-service-bookings" element={<MyServiceBookings />} />
+                <Route path="/staff/service-bookings" element={<ServiceBookings />} />
                 <Route
                     path="/customer/bookings/:id/edit"
                     element={
